@@ -1,0 +1,89 @@
+﻿@model StudentForumAspCore.Models.CreateGroupModel
+
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" asp-action="Create" asp-controller="Groups">
+                <div class="modal-header">
+                    <h5 class="modal-title">Create a new group</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md">
+                            <span id="other-errors" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="require-university-check" checked asp-for="RequireUniversity" />
+                                    <label class="custom-control-label" asp-for="RequireUniversity" for="require-university-check"></label>
+                                </div>
+                            </div>
+
+                            <div id="universities-container" class="form-group">
+                                <label asp-for="Universities" class="control-label"></label>
+                                <select class="form-control" asp-for="UniversityId" asp-items="Model.Universities"
+                                        id="universitySelect" data-live-search="true" title="Select a university"></select>
+                                <span asp-validation-for="UniversityId" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="custom-control custom-switch">
+                                    <input class="custom-control-input" id="require-password-check" checked asp-for="RequirePassword" />
+                                    <label class="custom-control-label" asp-for="RequirePassword" for="require-password-check"></label>
+                                </div>
+                            </div>
+
+                            <div id="password-container">
+                                <div class="form-group">
+                                    <label asp-for="Password" class="control-label"></label>
+                                    <input asp-for="Password" id="password" class="form-control" />
+                                    <span asp-validation-for="Password" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="ConfirmPassword" class="control-label"></label>
+                                    <input asp-for="ConfirmPassword" id="confirm-password" class="form-control" />
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" value="Create" class="btn btn-primary" data-save="modal" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#universitySelect').selectpicker();
+
+        $('select[data-live-search="true"]').on("shown.bs.select",
+            function () {
+                $(this).parent().find('input[type=search]')[0].focus();
+            });
+
+        $('#require-university-check').change(function () {
+            $('#universities-container').toggle(300);
+        });
+
+        $('#require-password-check').change(function () {
+            $('#password-container').toggle(300);
+            if ($(this).prop('checked') == false) {
+                $('#password').val(null);
+                $('#confirm-password').val(null);
+            }
+        });
+    });
+</script>

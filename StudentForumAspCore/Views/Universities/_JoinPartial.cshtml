@@ -1,0 +1,80 @@
+﻿@model StudentForumAspCore.Models.JoinUniversityModel
+
+<div class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="universitiesForm" method="post" asp-action="Join" asp-controller="Universities">
+                <div class="modal-header">
+                    <h5 class="modal-title">Join University</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md">
+                            <span id="other-errors" class="text-danger"></span>
+                            <div class="form-group">
+                                <label asp-for="Countries" for="countrySelect" class="control-label"></label>
+
+                                <select data-url="@Url.ActionLink("Get", "Universities")" class="form-control" title="Select a country"
+                                        asp-items="Model.Countries" id="countrySelect" data-live-search="true"></select>
+
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Universities" class="control-label"></label>
+                                <select asp-for="UniversityId" id="university-select" title="Select a country first to choose a university"
+                                        data-live-search="true" disabled class="form-control"></select>
+                                <span asp-validation-for="UniversityId" class="text-danger"></span>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div>
+                        <span class="d-block text-muted">Can't find your university?</span>
+                        <a class="d-block text-info">Add it now</a>
+                    </div>
+                    <input type="submit" value="Join" class="btn btn-primary" data-save="modal" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#countrySelect').selectpicker();
+        $('#university-select').selectpicker();
+
+        $('#countrySelect').data('selectpicker').$button.focus();
+
+        $('select[data-live-search="true"]').on("shown.bs.select",
+            function () {
+                $(this).parent().find('input[type=search]')[0].focus();
+            });
+
+        $('#countrySelect').on("changed.bs.select",
+            function (e) {
+                var url = new URL($(this).data('url'));
+                var params = { countryId: $(this).val() }
+
+                url.search = new URLSearchParams(params).toString();
+                fetch(url).then(r => r.json())
+                    .then(d => {
+                        $('#university-select').empty();
+                        d.forEach(function (item) {
+                            var option = document.createElement('option');
+                            option.value = item.id;
+                            option.text = item.name;
+                            $('#university-select')[0].appendChild(option);
+                        });
+                        $('#university-select').removeAttr('disabled');
+                        $('#university-select').selectpicker({ title: 'Select a university' });
+                        $('#university-select').selectpicker('refresh');
+                    });
+            });
+    });
+</script>

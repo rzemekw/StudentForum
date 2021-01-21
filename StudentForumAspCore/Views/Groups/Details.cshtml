@@ -1,0 +1,288 @@
+﻿@model StudentForumAspCore.Models.DetailsGroupModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="group-header" data-id="@Model.Id" data-user-id="@ViewBag.UserId">
+    <div class="group-name">
+        <h2>@Model.Name</h2>
+    </div>
+</div>
+
+<div id="topics-container">
+    <div class="topic">
+        <h3>Create a new topic</h3>
+        <form class="new-topic-form" asp-action="CreateTopic">
+            <input hidden name="GroupId" value="@Model.Id" />
+            <textarea rows="1" name="Name"></textarea>
+            <div class="new-topic-form-footer">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <div class="topic answers-hidden" id="future-topic" data-url="@Url.ActionLink("GetTopic", "Groups")">
+        <div class="topic-header">
+            <h3></h3>
+            <i class="fas fa-exclamation-circle new-topic-icon"></i>
+            <span></span>
+        </div>
+        <div class="topic-content">
+
+        </div>
+        <div class="topic-footer">
+            <span class="show-answers" data-url="@Url.ActionLink("GetAnswers", "Groups")">Show answers</span>
+            <span class="hide-answers">Hide answers</span>
+        </div>
+        <div class="topic-answers">
+            <div class="topic-answer">
+                <h4>@ViewBag.Name</h4>
+                <form class="topic-answer-form" asp-action="Answer">
+                    <textarea rows="1" name="Content" placeholder="Write your answer"></textarea>
+                    <div class="attachments">
+                    </div>
+                    <input hidden name="TopicId" />
+                    <div class="topic-answer-form-footer">
+                        <span class="add-attachments">Add attachments</span>
+                        <input type="file" hidden multiple />
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var topic in Model.UnseenTopics)
+    {
+        <div class="topic answers-hidden">
+            <div class="topic-header">
+                <h3>@topic.Author.FirstName @topic.Author.LastName</h3>
+                <i class="fas fa-exclamation-circle new-topic-icon"></i>
+                <span data-date="@Json.Serialize(topic.Date).ToString().Trim('\"')"></span>
+            </div>
+            <div class="topic-content">
+                @topic.Name
+            </div>
+            <div class="topic-footer">
+                <span class="show-answers" data-url="@Url.ActionLink("GetAnswers", "Groups", new { topicId = topic.Id })">Show answers</span>
+                <span class="hide-answers">Hide answers</span>
+            </div>
+            <div class="topic-answers">
+                @*<div class="topic-answer">
+                        <div class="topic-answer-header">
+                            <h4>Gal Anonim</h4>
+                            <span>12.07.2019</span>
+                        </div>
+                        <p>A nie wiem</p>
+                    </div>
+                    <div class="topic-answer">
+                        <div class="topic-answer-header">
+                            <h4>Wiktor Rzemek</h4>
+                            <span>12.07.2019</span>
+                        </div>
+                        <p>Ja też nie wiem</p>
+                    </div>
+                    <div class="topic-answer">
+                        <div class="topic-answer-header">
+                            <h4>Ktoś tam</h4>
+                            <span>13.07.2019</span>
+                        </div>
+                        <p>Coś tam coś xD BEakaa asdoo auuuu Lecimy z tym tematem, co tam??? Joł Joł Joł xDDDDDDD Przesyłam Załączniki</p>
+                        <div class="attachments">
+                            <a href="#">pies.jpg</a>
+                            <a href="#">kot.pdf</a>
+                            <a href="#">kotecazek.bmp</a>
+                        </div>
+                    </div>*@
+
+                <div class="topic-answer">
+                    <h4>@ViewBag.Name</h4>
+                    <form class="topic-answer-form" asp-action="Answer">
+                        <textarea rows="1" name="Content" placeholder="Write your answer"></textarea>
+                        <div class="attachments">
+                        </div>
+                        <input hidden name="TopicId" value="@topic.Id" />
+                        <div class="topic-answer-form-footer">
+                            <span class="add-attachments">Add attachments</span>
+                            <input type="file" hidden multiple />
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    @foreach (var topic in Model.TopicsWithNewAnswers)
+    {
+        <div class="topic answers-hidden">
+            <div class="topic-header">
+                <h3>@topic.Author.FirstName @topic.Author.LastName</h3>
+                <i class="fas fa-exclamation-circle new-answer-icon"></i>
+                <span data-date="@Json.Serialize(topic.Date).ToString().Trim('\"')"></span>
+            </div>
+            <div class="topic-content">
+                @topic.Name
+            </div>
+            <div class="topic-footer">
+                <span class="show-answers" data-url="@Url.ActionLink("GetAnswers", "Groups", new { topicId = topic.Id })">Show answers</span>
+                <span class="hide-answers">Hide answers</span>
+            </div>
+            <div class="topic-answers">
+                <div class="topic-answer">
+                    <h4>@ViewBag.Name</h4>
+                    <form class="topic-answer-form" asp-action="Answer">
+                        <textarea rows="1" name="Content" placeholder="Write your answer"></textarea>
+                        <div class="attachments">
+                        </div>
+                        <input hidden name="TopicId" value="@topic.Id" />
+                        <div class="topic-answer-form-footer">
+                            <span class="add-attachments">Add attachments</span>
+                            <input type="file" hidden multiple />
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+    @foreach (var topic in Model.OldTopics)
+    {
+        <div class="topic answers-hidden">
+            <div class="topic-header">
+                <h3>@topic.Author.FirstName @topic.Author.LastName</h3>
+                <span data-date="@Json.Serialize(topic.Date).ToString().Trim('\"')"></span>
+            </div>
+            <div class="topic-content">
+                @topic.Name
+            </div>
+            <div class="topic-footer">
+                <span class="show-answers" data-url="@Url.ActionLink("GetAnswers", "Groups", new { topicId = topic.Id })">Show answers</span>
+                <span class="hide-answers">Hide answers</span>
+            </div>
+            <div class="topic-answers">
+                <div class="topic-answer">
+                    <h4>@ViewBag.Name</h4>
+                    <form class="topic-answer-form" asp-action="Answer">
+                        <textarea rows="1" name="Content" placeholder="Write your answer"></textarea>
+                        <div class="attachments">
+                        </div>
+                        <input hidden name="TopicId" value="@topic.Id" />
+                        <div class="topic-answer-form-footer">
+                            <span class="add-attachments">Add attachments</span>
+                            <input type="file" hidden multiple />
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            function getAndAppendAnswer(answerId, topicId) {
+                var url = new URL("@Url.ActionLink("GetAnswer", "Groups")");
+                var params = { id: answerId }
+                url.search = new URLSearchParams(params).toString();
+
+                fetch(url).then(r => r.json())
+                    .then(answer => {
+
+                        var aDiv = $('<div class="topic-answer"><div class="topic-answer-header"><h4></h4><span></span></div><p></p></div>');
+                        aDiv.find('h4').text(answer.author.firstName + " " + answer.author.lastName);
+                        aDiv.find('span').data('date', answer.date);
+                        aDiv.find('span').text(displayDate(new Date(answer.date)));
+                        aDiv.find('p').text(answer.content);
+
+                        $('input[name="TopicId"]').filter(function () {
+                            return $(this).val() == topicId;
+                        }).parents('.topic-answer').before(aDiv);
+                    });
+            }
+
+            function getAndAppendTopic(topicId) {
+                var url = new URL($('#future-topic').data('url'));
+                var params = { id: topicId }
+                url.search = new URLSearchParams(params).toString();
+
+                fetch(url).then(r => r.json())
+                    .then(topic => {
+                        var futureTopic = $('#future-topic');
+                        var newTopic = futureTopic.clone(true);
+                        futureTopic.after(newTopic);
+
+                        newTopic.removeAttr('id');
+                        newTopic.find('.topic-header h3').text(topic.author.firstName + " " + topic.author.lastName);
+
+                        newTopic.find('.topic-header span').data('date', topic.date);
+                        newTopic.find('.topic-header span').text(displayDate(new Date(topic.date)));
+
+                        newTopic.find('.topic-content').text(topic.name);
+                        newTopic.find('input[name="TopicId"]').val(topic.id);
+
+                        if ($('.group-header').data('user-id') == topic.author.id)
+                            newTopic.find('.new-topic-icon').remove();
+
+                        var url = new URL(newTopic.find('.show-answers').data('url'));
+                        var params = { topicId: topic.id }
+                        url.search = new URLSearchParams(params).toString();
+                        newTopic.find('.show-answers').data('url', url);
+                    });
+            }
+
+            connection.on("TopicCreated", function (groupId, topicId) {
+                if (groupId == $('.new-topic-form input[name="GroupId"]').val())
+                    getAndAppendTopic(topicId);
+            });
+
+            connection.on("AnswerCreated", function (groupId, topicId, answerId, userId) {
+                if (groupId == $('.new-topic-form input[name="GroupId"]').val()) {
+                    var topic = $('input[name="TopicId"]').filter(function () {
+                        return $(this).val() == topicId;
+                    }).parents('.topic');
+
+                    if (!topic.hasClass('answers-hidden')) {
+                        getAndAppendAnswer(answerId, topicId);
+                    }
+                    else {
+                        if (topic.find('.topic-header .new-answer-icon').length)
+                            return;
+
+                        if ($('.group-header').data('user-id') == userId)
+                            return;
+
+                        topic.find('.topic-header').append($('<i class="fas fa-exclamation-circle new-answer-icon"></i>'));
+                    }
+                }
+            });
+
+            $('.new-topic-form').submit(function (e) {
+                e.preventDefault();
+
+                var content = $(this).find('textarea').val();
+                if (content == null || content == "")
+                    return false;
+
+                var url = $(this).attr('action');
+                var data = $(this).serialize();
+
+                $(this).find('textarea').val("");
+
+                $.post(url, data).fail(function (response) {
+                    alert('something went wrong, please try again');
+                });
+
+                return false;
+            });
+        })
+
+        
+    </script>
+}

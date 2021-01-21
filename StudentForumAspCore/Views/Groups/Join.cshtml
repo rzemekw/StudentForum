@@ -1,0 +1,23 @@
+﻿@model StudentForumAspCore.Models.JoinGroupModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div id="join-group-container">
+    <div class="text-center">
+        <h1>@Model.Name</h1>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form method="post" asp-action="Join">
+            <input hidden asp-for="Id" />
+            <input hidden asp-for="Name" />
+            <input hidden asp-for="RequirePassword" />
+            @if (Model.RequirePassword)
+            {
+                <input type="password" placeholder="Enter a password" asp-for="Password" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            }
+            <input type="submit" value="Join" class="btn btn-primary" />
+        </form>
+    </div>
+</div>

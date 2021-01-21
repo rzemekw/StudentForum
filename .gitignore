@@ -1,0 +1,9 @@
+.vs/
+StudentForum.sln
+bin/
+obj/
+lib/
+*.csproj
+*.csproj.user
+.config/
+VoiceChat.Web/Properties/

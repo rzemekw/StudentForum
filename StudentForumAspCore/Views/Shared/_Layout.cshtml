@@ -1,0 +1,82 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StudentForum</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-select/dist/css/bootstrap-select.min.css" />
+    <script src="https://kit.fontawesome.com/11d2463a8f.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/lib/mCustomScrollbar/dist/css/jquery.mCustomScrollbar.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">StudentForum</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <partial name="_LoginPartial" />
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" data-toggle="modal-window" data-url="@Url.Action("Create", "Groups")">
+                                Create a new group
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" data-toggle="modal-window" data-url="@Url.Action("Join", "Universities")">
+                                Join a university
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div id="groups-menu">
+            <div id="groups-container" data-url="@Url.ActionLink("GetUsersUniversitiesWithGroups", "Groups")"
+                 data-groups-url="@Url.Action("Details", "Groups", new { id = new int?() })"
+                 data-universities-url="@Url.Action("Details", "Universities", new { id = new int?() })"
+                 data-new-topic-available-url="@Url.ActionLink("NewTopicAvailable", "Groups")"
+                 data-new-answer-available-url="@Url.ActionLink("NewAnswerAvailable", "Groups")"
+                 data-topics-groupId-url="@Url.ActionLink("NewAnswerAvailable", "Groups")">
+                <div>
+                    <h2>Your Groups</h2>
+                    <ul>
+
+                    </ul>
+                </div>
+            </div>
+            <button class="btn btn-light"><i class="fas fa-bars"></i></button>
+        </div>
+    }
+
+
+
+    <div id="main-container" class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <div>
+        <div id="modalPlaceHolder" />
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/bootstrap-select/dist/js/bootstrap-select.min.js"></script>
+    <script src="~/lib/mCustomScrollbar/dist/js/jquery.mCustomScrollbar.min.js"></script>
+    <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
